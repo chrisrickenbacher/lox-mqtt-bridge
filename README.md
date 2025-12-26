@@ -39,22 +39,30 @@ A high-performance, bidirectional bridge between **Loxone Miniserver** and **MQT
 
 ## Quick Start (Docker)
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/chrisrickenbacher/lox-mqtt-bridge.git
-    cd lox-mqtt-bridge
-    ```
+The fastest way to get started is using the pre-built Docker image.
 
-2.  **Configure:**
-    Edit `docker-compose.yml` to set environment variables. Check [Configuration](docs/USER_GUIDE.md#configuration) for details.
+### 1. Create a `docker-compose.yml`
+```yaml
+services:
+  bridge:
+    image: chric/lox-mqtt-bridge:latest
+    container_name: lox-mqtt-bridge
+    restart: unless-stopped
+    environment:
+      - LOXONE_IP=192.168.1.10
+      - LOXONE_USER=admin
+      - LOXONE_PASS=your-password
+      - LOXONE_SNR=504F94D07F5F
+      - MQTT_HOST=192.168.1.50
+      - MQTT_PORT=1883
+```
 
-3.  **Run:**
-    ```bash
-    docker-compose up --build -d
-    ```
+### 2. Start the bridge
+```bash
+docker compose up -d
+```
 
-4.  **Verify:**
-    Check logs: `docker-compose logs -f bridge`
+Check [Configuration](docs/USER_GUIDE.md#configuration) for all available environment variables.
 
 ## Development
 
@@ -62,11 +70,21 @@ A high-performance, bidirectional bridge between **Loxone Miniserver** and **MQT
 - Go 1.25+
 - Docker & Docker Compose
 
-### Build & Run Locally
-```bash
-go mod tidy
-go run cmd/bridge/main.go
-```
+### Build & Run Locally (for contributors)
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/chrisrickenbacher/lox-mqtt-bridge.git
+   cd lox-mqtt-bridge
+   ```
+2. **Run with Docker Compose:**
+   ```bash
+   docker compose up --build -d
+   ```
+3. **Run binary only:**
+   ```bash
+   go mod tidy
+   go run cmd/bridge/main.go
+   ```
 
 ### Running Tests
 This project uses `go test` and `testify` for unit testing. To run all tests:
