@@ -1,0 +1,28 @@
+services:
+  bridge:
+    build: 
+      context: .
+      dockerfile: ./docker/bridge/Dockerfile
+    container_name: lox-mqtt-bridge
+    restart: unless-stopped
+    environment:
+      - LOXONE_IP=192.168.0.157
+      - LOXONE_USER=${LOX_USER}
+      - LOXONE_PASS=${LOX_PASS}
+      - LOXONE_SNR=504F94D07F5F
+      - MQTT_HOST=vernemq
+      - MQTT_PORT=1883
+      - MQTT_PROTOCOL=tcp
+
+  vernemq:
+    image: vernemq/vernemq:latest
+    container_name: vernemq
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "8080:8080" # WS port
+      - "8883:8883" # MQTT over TLS
+      - "8000:8080" # WebSocket over TLS
+    environment:
+      - DOCKER_VERNEMQ_ALLOW_ANONYMOUS=on
+      - DOCKER_VERNEMQ_ACCEPT_EULA=yes
