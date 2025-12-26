@@ -80,6 +80,20 @@ For verbose output:
 go test -v ./...
 ```
 
+### Releasing a New Version
+This project uses GitHub Actions to automate Docker image publishing and GitHub Releases.
+
+1.  **Use Conventional Commits**: Ensure your commit messages follow the [Conventional Commits](https://www.conventionalcommits.org/) specification (e.g., `feat: add light group support`, `fix: reconnect logic`).
+2.  **Tag the Release**: Create a semver tag starting with `v`:
+    ```bash
+    git tag v1.0.0
+    git push origin v1.0.0
+    ```
+3.  **Automatic Workflow**: The push will trigger a workflow that:
+    - Generates a categorized changelog based on your commit messages.
+    - Creates a GitHub Release.
+    - Builds and pushes multi-arch (`amd64`, `arm64`) Docker images to Docker Hub.
+
 ## Documentation
 
 [Checkout the documentation](./docs/)

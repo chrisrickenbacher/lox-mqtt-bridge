@@ -2,7 +2,6 @@ services:
   bridge:
     build: 
       context: .
-      dockerfile: ./docker/bridge/Dockerfile
     container_name: lox-mqtt-bridge
     restart: unless-stopped
     environment:

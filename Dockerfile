@@ -15,7 +15,9 @@ COPY . .
 
 # Build the application
 # CGO_ENABLED=0 for a static binary
-RUN CGO_ENABLED=0 GOOS=linux go build -o lox-bridge ./cmd/bridge
+ARG TARGETOS
+ARG TARGETARCH
+RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH:-$(go env GOARCH)} go build -o lox-bridge ./cmd/bridge
 
 # Final stage
 FROM alpine:latest
