@@ -68,6 +68,18 @@ go mod tidy
 go run cmd/bridge/main.go
 ```
 
+### Running Tests
+This project uses `go test` and `testify` for unit testing. To run all tests:
+
+```bash
+go test ./...
+```
+
+For verbose output:
+```bash
+go test -v ./...
+```
+
 ## Documentation
 
 [Checkout the documentation](./docs/)
