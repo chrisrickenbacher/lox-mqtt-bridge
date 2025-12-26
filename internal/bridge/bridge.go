@@ -16,8 +16,8 @@ import (
 // Bridge acts as the middleman between Loxone and MQTT
 type Bridge struct {
 	cfg      *config.Config
-	lox      *loxone.Client
-	mqtt     *mqtt.Client
+	lox      LoxoneProvider
+	mqtt     MQTTProvider
 	registry *Registry
 	done     chan struct{}
 }
@@ -123,7 +123,7 @@ func (b *Bridge) runEventLoop(ctx context.Context) error {
 			return nil
 		case <-b.done:
 			return nil
-		case event := <-b.lox.Events:
+		case event := <-b.lox.GetEvents():
 			u, err := ParseUUID(event.UUID)
 			if err != nil {
 				slog.Error("Invalid UUID in event", "uuid", event.UUID, "error", err)

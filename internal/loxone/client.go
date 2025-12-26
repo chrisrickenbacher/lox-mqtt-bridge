@@ -77,6 +77,11 @@ type Client struct {
 	token *Token
 }
 
+// GetEvents returns the event channel
+func (c *Client) GetEvents() <-chan Event {
+	return c.Events
+}
+
 // NewClient creates a new Loxone client
 func NewClient(cfg config.LoxoneConfig) *Client {
 	// Create HTTP client with insecure skip verify for local IP connections
