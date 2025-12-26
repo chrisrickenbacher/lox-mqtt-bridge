@@ -48,8 +48,38 @@ services:
 
 ## Usage & Topic Structure
 
+The bridge acts as a bidirectional gateway. It publishes state changes from Loxone to MQTT and listens for commands on MQTT to control Loxone devices.
+
+### 1. Topic Hierarchy & States (Read-Only)
 The bridge follows a strictly normalized topic structure based on the Miniserver's Room and Device names. All names are **sanitized** (lowercased, spaces replaced with hyphens).
 
-Check [Architecture](docs/ARCHITECTURE.md) for detailed topic structure. 
+*   **Structure:** Please refer to [Architecture > Topic Structure](ARCHITECTURE.md#5-topic-structure) for the complete definition of how topics are constructed (e.g., `lox/504F.../living-room/ceiling-light/...`).
+*   **Data Types:** Please refer to [Reference](REFERENCE.md) for a complete list of **Control Types** (like `Switch`, `Dimmer`, `Jalousie`) and exactly which state topics (e.g., `switch_active`, `dimmer_position`) are available for each.
 
-Check [Reference](docs/REFERENCE.md) for supported Loxone Control Types and their commands/states.
+### 2. Controlling Devices (Commands)
+To control a device, you publish a message to its specific **command topic**.
+
+**Command Topic Format:**
+`<topic-prefix>/<serial-number>/<room>/<control-name>/command`
+
+**Payload:**
+The payload is the raw value or command string you want to send to the Loxone control.
+
+#### Examples:
+
+**1. Turn on a Light (Switch)**
+*   **Topic:** `lox/504F94A00000/kitchen/ceiling-light/command`
+*   **Payload:** `On`
+*   *(See [Reference > Switch](REFERENCE.md#switch) for available commands like `On`, `Off`, `Pulse`)*
+
+**2. Set Dimmer to 50%**
+*   **Topic:** `lox/504F94A00000/living-room/spots/command`
+*   **Payload:** `50`
+*   *(See [Reference > Dimmer](REFERENCE.md#dimmer) for details)*
+
+**3. Open Blinds (Jalousie)**
+*   **Topic:** `lox/504F94A00000/bedroom/blinds/command`
+*   **Payload:** `FullOpen`
+*   *(See [Reference > Jalousie](REFERENCE.md#jalousie) for details)*
+
+**Note:** The bridge does not immediately update the state topic upon receiving a command. It sends the command to the Miniserver and waits for the Miniserver to push the new state back. This ensures the MQTT state always reflects the *actual* device state.
